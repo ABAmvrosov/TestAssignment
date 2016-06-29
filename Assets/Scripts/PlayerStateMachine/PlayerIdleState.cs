@@ -14,15 +14,15 @@ public class PlayerIdleState : PlayerState {
     public override IEnumerator Execute() {
         Debug.Log("IdleState");
         while (true) {
-            if (_player.IsGrounded && Input.GetButton("Jump")) {
+            if (_player.IsGrounded && Input.GetButtonDown("Jump")) {
                 _stateMachine.ChangeState(PlayerStateMarkers.Jump);
                 break;
             }
-            if (Input.GetButton("Horizontal") | Input.GetButton("Vertical")) {
+            if (Input.GetButtonDown("Horizontal") | Input.GetButtonDown("Vertical")) {
                 _stateMachine.ChangeState(PlayerStateMarkers.Move);
                 break;
             }
-            yield return _wait;
+            yield return null;
         }
     }
 }

@@ -4,13 +4,27 @@ using System.Collections;
 public class Player : MonoBehaviour {
 
     public bool IsGrounded { get; set; }
+    public bool IsMoving {
+        get { return _isMoving; }
+        set {
+            _isMoving = value;
+            if (value)
+                StartCoroutine(StartMovement());
+            else
+                StopCoroutine("StartMovement");
+        }
+    }
+    private bool _isMoving;
     [SerializeField] private float _jumpForce;
     [SerializeField] private float _speed;
+    [SerializeField] private float _maxSpeed;
     private Rigidbody _rigidbody;
+    private WaitForSeconds _wait;
 
     private void Awake() {
-        _rigidbody = GetComponent<Rigidbody>();
         IsGrounded = true;
+        _rigidbody = GetComponent<Rigidbody>();
+        _wait = new WaitForSeconds(0.1f);
         Messenger.AddListener("Jump", Jump);
         Messenger.AddListener("Move", Move);
     }
@@ -20,11 +34,19 @@ public class Player : MonoBehaviour {
     }
 
     private void Move() {
-        float moveHorizontal = Input.GetAxis("Horizontal");
-        float moveVertical = Input.GetAxis("Vertical");
+        IsMoving = true;
+    }
 
-        Vector3 movement = new Vector3(moveHorizontal, 0.0F, moveVertical);
+    private IEnumerator StartMovement() {
+        while (IsMoving) {
+            float moveHorizontal = Input.GetAxis("Horizontal");
+            float moveVertical = Input.GetAxis("Vertical");
 
-        _rigidbody.AddForce(movement * _speed);
+            Vector3 movement = new Vector3(moveHorizontal, 0.0F, moveVertical);
+            _rigidbody.AddForce(movement * _speed);
+            if (_rigidbody.velocity.magnitude > _maxSpeed)
+                _rigidbody.velocity = _rigidbody.velocity.normalized * _maxSpeed;
+            yield return null;
+        }
     }
 }

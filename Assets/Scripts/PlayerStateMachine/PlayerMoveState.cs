@@ -14,17 +14,19 @@ public class PlayerMoveState : PlayerState {
 
     public override IEnumerator Execute() {
         Debug.Log("MoveState");
+        Messenger.Broadcast("Move");
         while (true) {
-            Messenger.Broadcast("Move");
             if (_player.IsGrounded && Input.GetButton("Jump")) {
+                _player.IsMoving = false;
                 _stateMachine.ChangeState(PlayerStateMarkers.Jump);
                 break;
             }
             if (!Input.GetButton("Horizontal") & !Input.GetButton("Vertical")) {
                 _stateMachine.ChangeState(PlayerStateMarkers.Idle);
+                _player.IsMoving = false;
                 break;
             }
-            yield return _wait;
+            yield return null;
         }
     }
 }
