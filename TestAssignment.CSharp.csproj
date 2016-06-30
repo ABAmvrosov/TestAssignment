@@ -78,7 +78,10 @@
     <Compile Include="Assets\Scripts\MainStateMachine\MainStateMachine.cs" />
     <Compile Include="Assets\Scripts\MainStateMachine\PlayGameState.cs" />
     <Compile Include="Assets\Scripts\Messenger.cs" />
+    <Compile Include="Assets\Scripts\ObstaclesManager.cs" />
+    <Compile Include="Assets\Scripts\PickUp.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />
+    <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerFallState.cs" />
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerIdleState.cs" />
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerJumpState.cs" />
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerMoveState.cs" />

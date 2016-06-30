@@ -2,10 +2,16 @@
 using UnityEngine;
 using System;
 
-public abstract class PlayerState : MonoBehaviour {
+public class PlayerState {
 
     protected PlayerStateMachine _stateMachine;
     protected Player _player;
-    
-    public abstract IEnumerator Execute();
+
+    public virtual IEnumerator Execute() {
+        while (true) {
+            if (Input.GetButtonDown("Fire1"))
+                Debug.Log("Fire");
+            yield return null;
+        }
+    }
 }
