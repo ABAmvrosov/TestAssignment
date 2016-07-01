@@ -46,7 +46,6 @@ public class Player : MonoBehaviour {
         } else {
             PrevWeapon();
         }
-        Debug.Log("ScrollWheel");
     }
 
     private void NextWeapon() {
