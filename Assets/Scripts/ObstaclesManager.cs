@@ -21,7 +21,7 @@ public class ObstaclesManager : MonoBehaviour {
         _obstaclesPool.Add(_pickUpObstacle, new Stack<GameObject>());
         _obstaclesPool.Add(_unpathableObstacle1, new Stack<GameObject>());
         _obstaclesPool.Add(_unpathableObstacle2, new Stack<GameObject>());
-        InitPool(_pickUpObstacle, 20);
+        InitPool(_pickUpObstacle, 2);
         InitPool(_unpathableObstacle1, 10);
         InitPool(_unpathableObstacle2, 10);
         Messenger<GameObject>.AddListener("ReturnToPool", ReturnToPool);
@@ -62,22 +62,14 @@ public class ObstaclesManager : MonoBehaviour {
         }
     }
 
+    //TODO: Not working.
     public void ReturnToPool(GameObject gameObject) {
         Stack<GameObject> stack;
-        GameObject prefab = GetPrefab(gameObject.name);
-        _obstaclesPool.TryGetValue(prefab, out stack);
+        _obstaclesPool.TryGetValue(gameObject, out stack);
         Debug.Log(gameObject.name);
         if (stack != null) {
             stack.Push(gameObject);
             Debug.Log("Returned " + gameObject);
         }
-    }
-
-    private GameObject GetPrefab(string name) {
-        switch (name) {
-            case "PickUpObstacle":
-                return _pickUpObstacle;
-        }
-        return null;
     }
 }

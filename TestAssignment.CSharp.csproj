@@ -68,8 +68,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CameraFollow.cs" />
     <Compile Include="Assets\Scripts\GameManager.cs" />
+    <Compile Include="Assets\Scripts\MainCameraFollow.cs" />
     <Compile Include="Assets\Scripts\MainMenuManager.cs" />
     <Compile Include="Assets\Scripts\MainStateMachine\IMainState.cs" />
     <Compile Include="Assets\Scripts\MainStateMachine\LoadLevelState.cs" />
@@ -78,6 +78,8 @@
     <Compile Include="Assets\Scripts\MainStateMachine\MainStateMachine.cs" />
     <Compile Include="Assets\Scripts\MainStateMachine\PlayGameState.cs" />
     <Compile Include="Assets\Scripts\Messenger.cs" />
+    <Compile Include="Assets\Scripts\MinimapCameraFollow.cs" />
+    <Compile Include="Assets\Scripts\ObjectPool.cs" />
     <Compile Include="Assets\Scripts\ObstaclesManager.cs" />
     <Compile Include="Assets\Scripts\PickUp.cs" />
     <Compile Include="Assets\Scripts\Player.cs" />

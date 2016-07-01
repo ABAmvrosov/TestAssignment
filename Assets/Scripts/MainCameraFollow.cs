@@ -1,19 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraFollow : MonoBehaviour {
+public class MainCameraFollow : MonoBehaviour {
 
-	[SerializeField] private Transform _player;
+	[SerializeField] private Transform _target;
     private Vector3 offset;
 
     private void Awake() {
-        offset = transform.position - _player.transform.position;
+        offset = transform.position - _target.transform.position;
         StartCoroutine(UpdatePosition());
     }
 
     private IEnumerator UpdatePosition() {
         while (true) {
-            transform.position = _player.position + offset;
+            transform.position = _target.position + offset;
             yield return null;
         }
     }
