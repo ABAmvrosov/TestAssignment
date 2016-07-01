@@ -10,7 +10,7 @@ public class PlayerFallState : PlayerState {
     public PlayerFallState(Player player, PlayerStateMachine stateMachine) {
         _stateMachine = stateMachine;
         _player = player;
-        _ground = LayerMask.GetMask("Ground");
+        _ground = LayerMask.GetMask("Ground", "Unpathable");
         _distToGround = player.gameObject.GetComponent<SphereCollider>().bounds.extents.y + 0.1f;
     }
 

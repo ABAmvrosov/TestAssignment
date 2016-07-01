@@ -14,7 +14,7 @@ public class PlayerStateMachine : MonoBehaviour {
 
     private void Awake() {
         Player player = GetComponent<Player>();
-        _baseState = new PlayerState();
+        _baseState = new PlayerState(player, this);
         _idleState = new PlayerIdleState(player, this);
         _moveState = new PlayerMoveState(player, this);
         _jumpState = new PlayerJumpState(player, this);

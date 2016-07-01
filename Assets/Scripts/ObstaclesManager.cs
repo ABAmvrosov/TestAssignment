@@ -3,43 +3,81 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class ObstaclesManager : MonoBehaviour {
-
-    [SerializeField] private GameObject[] _obstaclesPrefabs;
-    private Stack<GameObject>[] _obstaclesPool;
-    [SerializeField] private float _spawnSpeed;
+    
     [SerializeField] private Transform _player;
-    private WaitForSeconds _wait;
-    [SerializeField] private int _poolSize;
+    [SerializeField] private float _spawnSpeed;
     [SerializeField] private float xMax;
     [SerializeField] private float zMax;
     [SerializeField] private float _offset;
+    [SerializeField] private GameObject _pickUpObstacle;
+    [SerializeField] private GameObject _unpathableObstacle1;
+    [SerializeField] private GameObject _unpathableObstacle2;
+    private Dictionary<GameObject, Stack<GameObject>> _obstaclesPool;
+    private WaitForSeconds _wait;
 
     private void Awake() {
         _wait = new WaitForSeconds(_spawnSpeed);
-        _obstaclesPool = new Stack<GameObject>[_obstaclesPrefabs.Length];
-        for (int i = 0; i < _obstaclesPrefabs.Length; i++) {
-            _obstaclesPool[i] = new Stack<GameObject>();
-            for (int j = 0; j < _poolSize; j++) {
-                _obstaclesPool[i].Push(Instantiate(_obstaclesPrefabs[i]));
-            }
-        }
+        _obstaclesPool = new Dictionary<GameObject, Stack<GameObject>>();
+        _obstaclesPool.Add(_pickUpObstacle, new Stack<GameObject>());
+        _obstaclesPool.Add(_unpathableObstacle1, new Stack<GameObject>());
+        _obstaclesPool.Add(_unpathableObstacle2, new Stack<GameObject>());
+        InitPool(_pickUpObstacle, 20);
+        InitPool(_unpathableObstacle1, 10);
+        InitPool(_unpathableObstacle2, 10);
+        Messenger<GameObject>.AddListener("ReturnToPool", ReturnToPool);
         StartCoroutine(Spawn());
     }
 
+    private void InitPool(GameObject prefab, int size) {
+        Stack<GameObject> stack;
+        _obstaclesPool.TryGetValue(prefab, out stack);
+        for (int i = 0; i < size; i++) {
+            stack.Push(Instantiate(prefab));
+        }
+    }
+
     private IEnumerator Spawn() {
+        GameObject[] spawns = { _pickUpObstacle, _unpathableObstacle1, _unpathableObstacle2 };
+        Stack<GameObject> stack;
+        GameObject tmp;
         while (true) {
             yield return _wait;
-            int index = Random.Range(0, _obstaclesPrefabs.Length);
-            if (_obstaclesPool[index].Count > 0) {
-                GameObject spawned = _obstaclesPool[index].Pop();
+            tmp = spawns[Random.Range(0, spawns.Length)];
+            _obstaclesPool.TryGetValue(tmp, out stack);
+            if (stack.Count > 0) {
+                GameObject spawned = stack.Pop();
+                spawned.SetActive(true);
                 float x = Random.Range(-xMax, xMax);
                 float z = Random.Range(-zMax, zMax);
                 Vector3 position = new Vector3(x, 0.5f, z);
-                if ((position - _player.position).sqrMagnitude < (_offset * _offset)) {
-
+                Vector3 direction = position - _player.position;
+                if (direction.sqrMagnitude < (_offset * _offset)) {
+                    float distance = _offset - direction.magnitude;
+                    spawned.transform.position = position;
+                    spawned.transform.Translate(direction.normalized * distance);
+                } else {
+                    spawned.transform.position = position;
                 }
-                spawned.transform.position = position;
             }
         }
+    }
+
+    public void ReturnToPool(GameObject gameObject) {
+        Stack<GameObject> stack;
+        GameObject prefab = GetPrefab(gameObject.name);
+        _obstaclesPool.TryGetValue(prefab, out stack);
+        Debug.Log(gameObject.name);
+        if (stack != null) {
+            stack.Push(gameObject);
+            Debug.Log("Returned " + gameObject);
+        }
+    }
+
+    private GameObject GetPrefab(string name) {
+        switch (name) {
+            case "PickUpObstacle":
+                return _pickUpObstacle;
+        }
+        return null;
     }
 }

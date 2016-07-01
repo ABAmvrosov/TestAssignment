@@ -87,6 +87,11 @@
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerMoveState.cs" />
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerState.cs" />
     <Compile Include="Assets\Scripts\PlayerStateMachine\PlayerStateMachine.cs" />
+    <Compile Include="Assets\Scripts\Score.cs" />
+    <Compile Include="Assets\Scripts\Weapon.cs" />
+    <Compile Include="Assets\Scripts\WeaponFireBall.cs" />
+    <Compile Include="Assets\Scripts\WeaponGrenade.cs" />
+    <Compile Include="Assets\Scripts\WeaponRailGun.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2015\UnityVS.CSharp.targets" />
 </Project>
