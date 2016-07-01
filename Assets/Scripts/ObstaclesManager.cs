@@ -12,15 +12,15 @@ public class ObstaclesManager : MonoBehaviour {
     [SerializeField] private GameObject _pickUpObstacle;
     [SerializeField] private GameObject _unpathableObstacle1;
     [SerializeField] private GameObject _unpathableObstacle2;
-    private Dictionary<GameObject, Stack<GameObject>> _obstaclesPool;
+    private Dictionary<string, Stack<GameObject>> _obstaclesPool;
     private WaitForSeconds _wait;
 
     private void Awake() {
         _wait = new WaitForSeconds(_spawnSpeed);
-        _obstaclesPool = new Dictionary<GameObject, Stack<GameObject>>();
-        _obstaclesPool.Add(_pickUpObstacle, new Stack<GameObject>());
-        _obstaclesPool.Add(_unpathableObstacle1, new Stack<GameObject>());
-        _obstaclesPool.Add(_unpathableObstacle2, new Stack<GameObject>());
+        _obstaclesPool = new Dictionary<string, Stack<GameObject>>();
+        _obstaclesPool.Add(_pickUpObstacle.name + "(Clone)", new Stack<GameObject>());
+        _obstaclesPool.Add(_unpathableObstacle1.name + "(Clone)", new Stack<GameObject>());
+        _obstaclesPool.Add(_unpathableObstacle2.name + "(Clone)", new Stack<GameObject>());
         InitPool(_pickUpObstacle, 2);
         InitPool(_unpathableObstacle1, 10);
         InitPool(_unpathableObstacle2, 10);
@@ -30,8 +30,9 @@ public class ObstaclesManager : MonoBehaviour {
 
     private void InitPool(GameObject prefab, int size) {
         Stack<GameObject> stack;
-        _obstaclesPool.TryGetValue(prefab, out stack);
+        _obstaclesPool.TryGetValue(prefab.name + "(Clone)", out stack);
         for (int i = 0; i < size; i++) {
+            GameObject tmp = Instantiate(prefab);
             stack.Push(Instantiate(prefab));
         }
     }
@@ -43,7 +44,7 @@ public class ObstaclesManager : MonoBehaviour {
         while (true) {
             yield return _wait;
             tmp = spawns[Random.Range(0, spawns.Length)];
-            _obstaclesPool.TryGetValue(tmp, out stack);
+            _obstaclesPool.TryGetValue(tmp.name + "(Clone)", out stack);
             if (stack.Count > 0) {
                 GameObject spawned = stack.Pop();
                 spawned.SetActive(true);
@@ -65,7 +66,7 @@ public class ObstaclesManager : MonoBehaviour {
     //TODO: Not working.
     public void ReturnToPool(GameObject gameObject) {
         Stack<GameObject> stack;
-        _obstaclesPool.TryGetValue(gameObject, out stack);
+        _obstaclesPool.TryGetValue(gameObject.name, out stack);
         Debug.Log(gameObject.name);
         if (stack != null) {
             stack.Push(gameObject);
